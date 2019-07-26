@@ -101,9 +101,9 @@ void Shader::Bind(float *M, float *V, float *P){
     
     for (auto iter = mUniformVec4s.begin(); iter!=mUniformVec4s.end(); ++iter) {
         glUniform4fv(iter->second->mLocation,1, iter->second->v);
-        if(iter->second->name.compare("U_LightPos") == 0){
-            printf("name = %s,v0={%f},v1={%f},v2={%f},v3={%f}\n",iter->second->name.c_str(),iter->second->v[0],iter->second->v[1],iter->second->v[2],iter->second->v[3]);
-        }
+//        if(iter->second->name.compare("U_LightPos") == 0){
+//            printf("name = %s,v0={%f},v1={%f},v2={%f},v3={%f}\n",iter->second->name.c_str(),iter->second->v[0],iter->second->v[1],iter->second->v[2],iter->second->v[3]);
+//        }
     }
     
     if(mPositionLocation>=0){

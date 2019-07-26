@@ -14,7 +14,6 @@ FrameBufferObject::FrameBufferObject(){
 }
 
 void FrameBufferObject::AttachColorBuffer(const char *bufferName, GLenum attachment, int width, int height){
-    GLuint colorBuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferObject);
     glGenTextures(1, &colorBuffer);
     glBindTexture(GL_TEXTURE_2D, colorBuffer);
@@ -31,7 +30,6 @@ void FrameBufferObject::AttachColorBuffer(const char *bufferName, GLenum attachm
 }
 
 void FrameBufferObject::AttachDepthBuffer(const char *bufferName, int width, int height){
-    GLuint depthMap;
     glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferObject);
     glGenTextures(1, &depthMap);
     glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -59,7 +57,7 @@ void FrameBufferObject::Finish(){
         }
         glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferObject);
         glDrawBuffers(nCount, buffers);
-        glBindBuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);//!!!!!!
     }
 }
 
@@ -67,7 +65,7 @@ void FrameBufferObject::Bind(){
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &mPrevFrameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferObject);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 }
 
 void FrameBufferObject::Unbind(){
@@ -80,4 +78,13 @@ GLuint FrameBufferObject::GetBuffer(const char *bufferName){
         return iter->second;
     }
     return 0;
+}
+
+void FrameBufferObject::Release(){
+    mBuffers.clear();
+    mDrawBuffers.clear();
+    glDeleteTextures(1, &colorBuffer);
+    glDeleteTextures(1, &depthMap);
+    glDeleteFramebuffers(1, &mFrameBufferObject);
+    glDeleteFramebuffers(1, &mFrameBufferObject);
 }

@@ -14,6 +14,8 @@
 
 class FrameBufferObject{
 public:
+    GLuint depthMap;
+    GLuint colorBuffer;
     GLuint mFrameBufferObject;
     GLint mPrevFrameBuffer;
     std::map<std::string,GLuint> mBuffers;
@@ -26,6 +28,7 @@ public:
     void Bind();
     void Unbind();
     GLuint GetBuffer(const char* bufferName);
+    void Release();
 };
 
 
