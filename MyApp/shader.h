@@ -15,6 +15,7 @@
 struct UniformTexture{
     GLint mLocation;
     GLuint mTexture;
+    char* name;
     UniformTexture(){
         mLocation = -1;
         mTexture = 0;
@@ -24,6 +25,7 @@ struct UniformTexture{
 struct UniformTextureCube{
     GLint mLocation;
     GLuint mTexture;
+    char* name;
     UniformTextureCube(){
         mLocation = -1;
         mTexture = 0;
@@ -32,6 +34,7 @@ struct UniformTextureCube{
 
 struct UniformVector4f{
     GLint mLocation;
+    std::string name;
     float v[4];
     UniformVector4f(){
         mLocation = -1;

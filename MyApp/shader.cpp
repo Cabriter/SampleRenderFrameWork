@@ -101,6 +101,9 @@ void Shader::Bind(float *M, float *V, float *P){
     
     for (auto iter = mUniformVec4s.begin(); iter!=mUniformVec4s.end(); ++iter) {
         glUniform4fv(iter->second->mLocation,1, iter->second->v);
+        if(iter->second->name.compare("U_LightPos") == 0){
+            printf("name = %s,v0={%f},v1={%f},v2={%f},v3={%f}\n",iter->second->name.c_str(),iter->second->v[0],iter->second->v[1],iter->second->v[2],iter->second->v[3]);
+        }
     }
     
     if(mPositionLocation>=0){
@@ -143,6 +146,7 @@ void Shader::SetVec4(const char *name, float x, float y, float z, float w){
         GLint location = glGetUniformLocation(mProgram, name);
         if(location != -1){
             UniformVector4f* v = new UniformVector4f();
+            v->name = name;
             v->v[0] = x;
             v->v[1] = y;
             v->v[2] = z;
