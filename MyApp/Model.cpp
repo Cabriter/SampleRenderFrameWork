@@ -21,15 +21,20 @@ void Model::Init(const char *modelPath){
     struct VertexDefine{
         int posIndex;
         int texcoordIndex;
-        int normalIndex;
+        int normalIndex;//这里的法线是垂直切平面的法线
+        int tangentIndex;
     };
+    //TBN矩阵生成
+    //T轴为三点面中其中一个轴，N为平面垂直法线，B为TN叉乘所得
+    //前提，模型中的法线坐标系都是在模型空间下，要确定一个TBN坐标系，
+    //将法线贴图中的法线转换到TBN坐标系下，将新的法线和T轴在模型坐标系下的向量保存下来，T轴就是tangent向量
     
     int nFileSize = 0;
     unsigned char* fileContent = LoadFileContent(modelPath, nFileSize);
     if(fileContent == nullptr){
         return;
     }
-    std::vector<FloatData> positions,texcoords,normals;
+    std::vector<FloatData> positions,texcoords,normals,tangents;
     std::vector<VertexDefine> vertexes;
     std::stringstream ssFileContent((char*)fileContent);
     std::string temp;
@@ -65,6 +70,7 @@ void Model::Init(const char *modelPath){
                 std::stringstream ssOneLine(szOneLine);
                 ssOneLine >> temp;
                 std::string vertexStr;
+                std::vector<VertexDefine> tempPos;
                 for(int i = 0;i<3;i++){
                     ssOneLine >> vertexStr;
                     size_t pos = vertexStr.find_first_of("/");
@@ -77,6 +83,25 @@ void Model::Init(const char *modelPath){
                     vd.texcoordIndex = atoi(texcoordIndexStr.c_str());
                     vd.normalIndex = atoi(normalIndexStr.c_str());
                     vertexes.push_back(vd);
+                    tempPos.push_back(vd);
+                }
+                
+                FloatData pos1 = positions[tempPos[0].posIndex];
+                FloatData pos2 = positions[tempPos[1].posIndex];
+                FloatData pos3 = positions[tempPos[2].posIndex];
+                
+                FloatData tangent;
+                tangent.v[0] = pos1.v[0] - pos2.v[0];
+                tangent.v[1] = pos1.v[1] - pos2.v[1];
+                tangent.v[2] = pos1.v[2] - pos2.v[2];
+                tangents.push_back(tangent);
+                //遍历tempPos中的三个点，计算出tangent向量，存储在tangents数组中，并记录存储的index
+                
+                int tangentIndex = tangents.size();
+                
+                for(std::vector<VertexDefine>::iterator iter = tempPos.begin();iter != tempPos.end();iter++)
+                {
+                    iter->tangentIndex = tangentIndex;
                 }
             }
         }
