@@ -15,9 +15,6 @@ Model::Model(){
 }
 
 void Model::Init(const char *modelPath){
-    struct FloatData{
-        float v[3];
-    };
     struct VertexDefine{
         int posIndex;
         int texcoordIndex;
@@ -34,7 +31,8 @@ void Model::Init(const char *modelPath){
     if(fileContent == nullptr){
         return;
     }
-    std::vector<FloatData> positions,texcoords,normals,tangents;
+    std::vector<glm::vec3> positions,normals,tangents;;
+    std::vector<glm::vec2> texcoords;
     std::vector<VertexDefine> vertexes;
     std::stringstream ssFileContent((char*)fileContent);
     std::string temp;
@@ -47,23 +45,23 @@ void Model::Init(const char *modelPath){
                 std::stringstream ssOneLine(szOneLine);
                 if(szOneLine[1] == 't'){
                     ssOneLine >> temp;
-                    FloatData floatData;
-                    ssOneLine >> floatData.v[0];
-                    ssOneLine >> floatData.v[1];
+                    glm::vec2 floatData;
+                    ssOneLine >> floatData.x;
+                    ssOneLine >> floatData.y;
                     texcoords.push_back(floatData);
                 }else if(szOneLine[1] == 'n'){
                     ssOneLine >> temp;
-                    FloatData floatData;
-                    ssOneLine >> floatData.v[0];
-                    ssOneLine >> floatData.v[1];
-                    ssOneLine >> floatData.v[2];
+                    glm::vec3 floatData;
+                    ssOneLine >> floatData.x;
+                    ssOneLine >> floatData.y;
+                    ssOneLine >> floatData.z;
                     normals.push_back(floatData);
                 }else{
                     ssOneLine >> temp;
-                    FloatData floatData;
-                    ssOneLine >> floatData.v[0];
-                    ssOneLine >> floatData.v[1];
-                    ssOneLine >> floatData.v[2];
+                    glm::vec3 floatData;
+                    ssOneLine >> floatData.x;
+                    ssOneLine >> floatData.y;
+                    ssOneLine >> floatData.z;
                     positions.push_back(floatData);
                 }
             }else if(szOneLine[0] == 'f'){
@@ -86,15 +84,27 @@ void Model::Init(const char *modelPath){
                     tempPos.push_back(vd);
                 }
                 
-                FloatData pos1 = positions[tempPos[0].posIndex];
-                FloatData pos2 = positions[tempPos[1].posIndex];
-                FloatData pos3 = positions[tempPos[2].posIndex];
+                glm::vec3 vecPos1 = positions[tempPos[0].posIndex];;
+                glm::vec3 vecPos2 = positions[tempPos[1].posIndex];;
+                glm::vec3 vecPos3 = positions[tempPos[2].posIndex];;
                 
-                FloatData tangent;
-                tangent.v[0] = pos1.v[0] - pos2.v[0];
-                tangent.v[1] = pos1.v[1] - pos2.v[1];
-                tangent.v[2] = pos1.v[2] - pos2.v[2];
-                tangents.push_back(tangent);
+                glm::vec2 vecTexcoord1 = texcoords[tempPos[0].texcoordIndex];;
+                glm::vec2 vecTexcoord2 = texcoords[tempPos[1].texcoordIndex];;
+                glm::vec2 vecTexcoord3 = texcoords[tempPos[2].texcoordIndex];;
+                
+                glm::vec3 tangent1;
+                glm::vec3 edge1 = vecPos2 - vecPos1;
+                glm::vec3 edge2 = vecPos3 - vecPos1;
+                glm::vec2 deltaUV1 = vecTexcoord2 - vecTexcoord1;
+                glm::vec2 deltaUV2 = vecTexcoord3 - vecTexcoord1;
+                
+                GLfloat f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+                tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+                tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+                tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+                tangent1 = glm::normalize(tangent1);
+                
+                tangents.push_back(tangent1);
                 //遍历tempPos中的三个点，计算出tangent向量，存储在tangents数组中，并记录存储的index
                 
                 int tangentIndex = tangents.size();
@@ -111,12 +121,12 @@ void Model::Init(const char *modelPath){
     mVertexBuffer = new VertexBuffer();
     mVertexBuffer->SetSize(vertexCount);
     for (int i = 0; i<vertexCount; ++i) {
-        float* temp = positions[vertexes[i].posIndex - 1].v;
-        mVertexBuffer->SetPosition(i, temp[0], temp[1], temp[2]);
-        temp = texcoords[vertexes[i].texcoordIndex - 1].v;
-        mVertexBuffer->SetTexcoord(i, temp[0], temp[1]);
-        temp = normals[vertexes[i].normalIndex - 1].v;
-        mVertexBuffer->SetNormal(i, temp[0], temp[1], temp[2]);
+        glm::vec3 pos = positions[vertexes[i].posIndex - 1];
+        mVertexBuffer->SetPosition(i, pos.x, pos.y, pos.z);
+        glm::vec2 texcoord = texcoords[vertexes[i].texcoordIndex - 1];
+        mVertexBuffer->SetTexcoord(i, texcoord.x, texcoord.y);
+        glm::vec3 normal = normals[vertexes[i].normalIndex - 1];
+        mVertexBuffer->SetNormal(i, normal.x, normal.y, normal.z);
     }
     mShader = new Shader();
 }
