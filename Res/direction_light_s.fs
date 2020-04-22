@@ -35,7 +35,7 @@ void main(){
     vec3 RealNormal = texture2D(U_NormalMap,V_Texcoord.xy).rgb;
     RealNormal = normalize(RealNormal * 2.0 - vec3(1.0));
     vec3 worldNormal = normalize(V_TBN * RealNormal);//TBN is bug
-    MyApp/scene.cpp
+    
     vec4 basecolor = texture2D(U_Texture,V_Texcoord.xy);
     vec3 L = U_LightPos.xyz;
     L = normalize(L);
