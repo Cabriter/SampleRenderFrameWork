@@ -28,6 +28,7 @@ void Init(){
     frame = 0;
     dot = 0;
     sphere.Init("Res/Sphere.obj");
+    
     sphere.mShader->Init("Res/direction_light_s.vs", "Res/direction_light_s.fs");
     sphere.mModelMatrix = glm::translate(0.0f, 2.0f, 0.0f);
     
@@ -105,7 +106,9 @@ void Draw(){
     cube.mShader->SetTexture("U_ShadowMap", depthFBO->GetBuffer("depth"));
     cube.mLightViewMatrix = glm::value_ptr(lightView);
     cube.mLightProjectMatrix = glm::value_ptr(lightProjection);
+    cube.SetTexture("Res/top.bmp");
     cube.Draw(viewMatrix, projectionMatrix, cameraPos.x, cameraPos.y, cameraPos.z);
+    sphere.SetTexture("Res/front.bmp");
     sphere.Draw(viewMatrix, projectionMatrix, cameraPos.z, cameraPos.y, cameraPos.z);
     
     if(frame / 60 != dot){

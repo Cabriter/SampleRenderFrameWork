@@ -2,6 +2,7 @@
 precision mediump float;
 #endif
 uniform sampler2D U_ShadowMap;
+uniform sampler2D U_Texture;
 
 uniform vec4 U_AmbientMaterial;
 uniform vec4 U_DiffuseMaterial;
@@ -17,6 +18,7 @@ uniform vec4 U_CameraPos;
 varying vec4 V_Normal;
 varying vec4 V_WorldPos;
 varying vec4 V_LightSpaceFragPos;
+varying vec4 V_Texcoord;
 
 float CalculateShadow(){
     vec3 fragPos = V_LightSpaceFragPos.xyz / V_LightSpaceFragPos.w;
@@ -28,6 +30,7 @@ float CalculateShadow(){
 }
 
 void main(){
+    vec4 basecolor = texture2D(U_Texture,V_Texcoord.xy);
     vec3 L = U_LightPos.xyz;
     L = normalize(L);
     vec3 n = normalize(V_Normal.xyz);
@@ -44,6 +47,6 @@ void main(){
     }
     vec4 color = U_AmbientMaterial * U_AmbientLight + diffuseColor + specularColor;
     
-    color = color * vec4(vec3(1.0 - CalculateShadow()),1.0);
+    color = basecolor + color * vec4(vec3(1.0 - CalculateShadow()),1.0);
     gl_FragColor = color;
 }

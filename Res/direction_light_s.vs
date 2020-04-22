@@ -17,10 +17,12 @@ uniform mat4 LightProjectionMatrix;
 varying vec4 V_Normal;
 varying vec4 V_WorldPos;
 varying vec4 V_LightSpaceFragPos;
+varying vec4 V_Texcoord;
 
 void main(){
     V_WorldPos = ModelMatrix * position;
     V_LightSpaceFragPos = LightProjectionMatrix * LightViewMatrix * V_WorldPos;
     V_Normal = IT_ModelMatrix * normal;
+    V_Texcoord = texcoord;
     gl_Position = ProjectionMatrix * ViewMatrix * V_WorldPos;
 }
