@@ -107,7 +107,7 @@ void Model::Init(const char *modelPath){
                 tangents.push_back(tangent1);
                 //遍历tempPos中的三个点，计算出tangent向量，存储在tangents数组中，并记录存储的index
                 
-                int tangentIndex = tangents.size();
+                int tangentIndex = tangents.size() - 1;
                 
                 for(std::vector<VertexDefine>::iterator iter = tempPos.begin();iter != tempPos.end();iter++)
                 {
@@ -171,4 +171,8 @@ void Model::SetSpecularMaterial(float r, float g, float b, float a){
 
 void Model::SetTexture(const char *imagePath){
     mShader->SetTexture("U_Texture", imagePath);
+}
+
+void Model::SetNormalMap(const char *imagePath){
+    mShader->SetTexture("U_NormalMap", imagePath);
 }

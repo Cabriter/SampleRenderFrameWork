@@ -3,6 +3,7 @@ precision mediump float;
 #endif
 uniform sampler2D U_ShadowMap;
 uniform sampler2D U_Texture;
+uniform sampler2D U_NormalMap;
 
 uniform vec4 U_AmbientMaterial;
 uniform vec4 U_DiffuseMaterial;
@@ -19,6 +20,7 @@ varying vec4 V_Normal;
 varying vec4 V_WorldPos;
 varying vec4 V_LightSpaceFragPos;
 varying vec4 V_Texcoord;
+varying mat3 V_TBN;
 
 float CalculateShadow(){
     vec3 fragPos = V_LightSpaceFragPos.xyz / V_LightSpaceFragPos.w;
@@ -30,10 +32,14 @@ float CalculateShadow(){
 }
 
 void main(){
+    vec3 RealNormal = texture2D(U_NormalMap,V_Texcoord.xy).rgb;
+    RealNormal = normalize(RealNormal * 2.0 - vec3(1.0));
+    vec3 worldNormal = normalize(V_TBN * RealNormal);//TBN is bug
+    MyApp/scene.cpp
     vec4 basecolor = texture2D(U_Texture,V_Texcoord.xy);
     vec3 L = U_LightPos.xyz;
     L = normalize(L);
-    vec3 n = normalize(V_Normal.xyz);
+    vec3 n = normalize(RealNormal.xyz);//worldNormal
     float diffuseIntensity = max(0.0,dot(L,n));
     vec4 diffuseColor = U_DiffuseLight * U_DiffuseMaterial * diffuseIntensity;
     vec4 specularColor = vec4(0.0,0.0,0.0,0.0);

@@ -17,6 +17,7 @@ struct Vertex {
     float Color[4];
     float Texcoord[4];
     float Normal[4];
+    float Tangent[4];
 };
 
 class VertexBuffer{
@@ -32,6 +33,7 @@ public:
     void SetColor(int index,float r,float g,float b,float a = 1.0f);
     void SetTexcoord(int index,float x,float y);
     void SetNormal(int index,float x,float y,float z);
+    void SetTangent(int index,float x,float y,float z);
     void Bind();
     void Unbind();
     Vertex& Get(int index);

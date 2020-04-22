@@ -28,7 +28,7 @@ void Init(){
     frame = 0;
     dot = 0;
     sphere.Init("Res/Sphere.obj");
-    
+    sphere.SetNormalMap("Res/normalMap.bmp");
     sphere.mShader->Init("Res/direction_light_s.vs", "Res/direction_light_s.fs");
     sphere.mModelMatrix = glm::translate(0.0f, 2.0f, 0.0f);
     
@@ -45,6 +45,8 @@ void Init(){
     sphere.mShader->SetVec4("U_CameraPos", cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
     
     cube.Init("Res/Cube.obj");
+    
+    
     cube.mShader->Init("Res/direction_light_s.vs", "Res/direction_light_s.fs");
     cube.mModelMatrix = glm::scale(9.0f, 1.0f, 9.0f);
     
@@ -107,8 +109,10 @@ void Draw(){
     cube.mLightViewMatrix = glm::value_ptr(lightView);
     cube.mLightProjectMatrix = glm::value_ptr(lightProjection);
     cube.SetTexture("Res/top.bmp");
+    cube.SetNormalMap("Res/normalMap.bmp");
     cube.Draw(viewMatrix, projectionMatrix, cameraPos.x, cameraPos.y, cameraPos.z);
     sphere.SetTexture("Res/front.bmp");
+    sphere.SetNormalMap("Res/normalMap.bmp");
     sphere.Draw(viewMatrix, projectionMatrix, cameraPos.z, cameraPos.y, cameraPos.z);
     
     if(frame / 60 != dot){

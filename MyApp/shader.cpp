@@ -76,6 +76,7 @@ void Shader::Init(const char *vs, const char *fs){
         mColorLocation = glGetAttribLocation(mProgram, "color");
         mTexcoordLocation = glGetAttribLocation(mProgram, "texcoord");
         mNormalLocation = glGetAttribLocation(mProgram, "normal");
+        mTangentLocation = glGetAttribLocation(mProgram, "tangent");
     }
 }
 
@@ -91,6 +92,9 @@ void Shader::Bind(float *M, float *V, float *P){
         glActiveTexture(GL_TEXTURE0+iIndex);
         glBindTexture(GL_TEXTURE_2D, iter->second->mTexture);
         glUniform1i(iter->second->mLocation, iIndex++);
+                if(iter->second->name.compare("U_NormalMap") == 0){
+                    printf("name = %s,texture={%d},location={%d}\n",iter->second->name.c_str(),iter->second->mTexture,iter->second->mLocation);
+                }
     }
     //iIndex = 0;
     for (auto iter = mUniformTextureCubes.begin(); iter!=mUniformTextureCubes.end(); ++iter) {
@@ -122,6 +126,10 @@ void Shader::Bind(float *M, float *V, float *P){
         glEnableVertexAttribArray(mNormalLocation);
         glVertexAttribPointer(mNormalLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(float) * 12));
     }
+    if(mTangentLocation>=0){
+        glEnableVertexAttribArray(mTangentLocation);
+        glVertexAttribPointer(mTangentLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(float) * 16));
+    }
 }
 
 void Shader::SetTexture(const char *name, const char *imagePath){
@@ -132,6 +140,7 @@ void Shader::SetTexture(const char *name, const char *imagePath){
             UniformTexture* t = new UniformTexture();
             t->mLocation = location;
             t->mTexture = CreateTexture2DFromBMP(imagePath);
+            t->name = name;
             mUniformTextures.insert(std::pair<std::string, UniformTexture*>(name,t));
         }
     }else{
@@ -171,6 +180,7 @@ GLuint Shader::SetTexture(const char *name, GLuint texture){
             UniformTexture* t = new UniformTexture();
             t->mLocation = location;
             t->mTexture = texture;
+            t->name = name;
             mUniformTextures.insert(std::pair<std::string, UniformTexture*>(name,t));
         }
     }else{
@@ -189,6 +199,7 @@ GLuint Shader::SetTextureCube(const char *name, GLuint texture){
             UniformTextureCube* t = new UniformTextureCube();
             t->mLocation = location;
             t->mTexture = texture;
+            t->name = name;
             mUniformTextureCubes.insert(std::pair<std::string, UniformTextureCube*>(name,t));
         }
     }else{

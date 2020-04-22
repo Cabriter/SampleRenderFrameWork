@@ -51,6 +51,13 @@ void VertexBuffer::SetNormal(int index,float x,float y,float z){
     mVertexes[index].Normal[3] = 1.0f;
 }
 
+void VertexBuffer::SetTangent(int index, float x, float y, float z){
+        mVertexes[index].Tangent[0] = x;
+        mVertexes[index].Tangent[1] = y;
+        mVertexes[index].Tangent[2] = z;
+        mVertexes[index].Tangent[3] = 1.0f;
+}
+
 void VertexBuffer::Bind(){
     glBindBuffer(GL_ARRAY_BUFFER,mVBO);
     glBufferSubData(GL_ARRAY_BUFFER,0,sizeof(Vertex) * mVertexCount,mVertexes);

@@ -29,6 +29,7 @@ public:
     void SetDiffuseMatrial(float r,float g,float b,float a);
     void SetSpecularMaterial(float r,float g,float b,float a);
     void SetTexture(const char* imagePath);
+    void SetNormalMap(const char* imagePath);
 };
 
 

@@ -15,7 +15,7 @@
 struct UniformTexture{
     GLint mLocation;
     GLuint mTexture;
-    char* name;
+    std::string name;
     UniformTexture(){
         mLocation = -1;
         mTexture = 0;
@@ -25,7 +25,7 @@ struct UniformTexture{
 struct UniformTextureCube{
     GLint mLocation;
     GLuint mTexture;
-    char* name;
+    std::string name;
     UniformTextureCube(){
         mLocation = -1;
         mTexture = 0;
@@ -54,7 +54,7 @@ public:
     std::map<std::string,UniformVector4f*> mUniformVec4s;
     
     GLint mModeMatrixLocation,mViewMatrixLocation,mProjectMatrixLocation;
-    GLint mPositionLocation,mColorLocation,mTexcoordLocation,mNormalLocation;
+    GLint mPositionLocation,mColorLocation,mTexcoordLocation,mNormalLocation,mTangentLocation;
     void Init(const char* vs,const char* fs);
     void Bind(float *M,float* V,float* P);
     void SetTexture(const char* name,const char* imagePath);
