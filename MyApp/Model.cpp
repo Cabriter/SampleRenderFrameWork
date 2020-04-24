@@ -127,6 +127,8 @@ void Model::Init(const char *modelPath){
         mVertexBuffer->SetTexcoord(i, texcoord.x, texcoord.y);
         glm::vec3 normal = normals[vertexes[i].normalIndex - 1];
         mVertexBuffer->SetNormal(i, normal.x, normal.y, normal.z);
+        glm::vec3 tangent = tangents[vertexes[i].tangentIndex - 1];
+        mVertexBuffer->SetTangent(i, normal.x, normal.y, normal.z);
     }
     mShader = new Shader();
 }

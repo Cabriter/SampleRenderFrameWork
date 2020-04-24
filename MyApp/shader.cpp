@@ -92,9 +92,9 @@ void Shader::Bind(float *M, float *V, float *P){
         glActiveTexture(GL_TEXTURE0+iIndex);
         glBindTexture(GL_TEXTURE_2D, iter->second->mTexture);
         glUniform1i(iter->second->mLocation, iIndex++);
-                if(iter->second->name.compare("U_NormalMap") == 0){
-                    printf("name = %s,texture={%d},location={%d}\n",iter->second->name.c_str(),iter->second->mTexture,iter->second->mLocation);
-                }
+//                if(iter->second->name.compare("U_NormalMap") == 0){
+//                    printf("name = %s,texture={%d},location={%d}\n",iter->second->name.c_str(),iter->second->mTexture,iter->second->mLocation);
+//                }
     }
     //iIndex = 0;
     for (auto iter = mUniformTextureCubes.begin(); iter!=mUniformTextureCubes.end(); ++iter) {

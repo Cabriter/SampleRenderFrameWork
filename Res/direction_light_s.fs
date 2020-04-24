@@ -39,7 +39,7 @@ void main(){
     vec4 basecolor = texture2D(U_Texture,V_Texcoord.xy);
     vec3 L = U_LightPos.xyz;
     L = normalize(L);
-    vec3 n = normalize(RealNormal.xyz);//worldNormal
+    vec3 n = normalize(worldNormal.xyz);//worldNormal
     float diffuseIntensity = max(0.0,dot(L,n));
     vec4 diffuseColor = U_DiffuseLight * U_DiffuseMaterial * diffuseIntensity;
     vec4 specularColor = vec4(0.0,0.0,0.0,0.0);

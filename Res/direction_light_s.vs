@@ -26,16 +26,16 @@ void main(){
     vec3 n = normalize(vec3(IT_ModelMatrix * normal));
     vec3 b = cross(n , t);
     
-    mat3 nbt = mat3(t,b,n);//inverse transpose
+    V_TBN = mat3(t,b,n);//inverse transpose
     
 //    mat3 yuv = mat3(
 //    vec3(yuv_matrix[0].x, yuv_matrix[1].x, yuv_matrix[2].x),
 //    vec3(yuv_matrix[0].y, yuv_matrix[1].y, yuv_matrix[2].y),
 //    vec3(yuv_matrix[0].z, yuv_matrix[1].z, yuv_matrix[2].z));
-    V_TBN = mat3(
-        vec3(nbt[0].x, nbt[1].x, nbt[2].x),
-        vec3(nbt[0].y, nbt[1].y, nbt[2].y),
-        vec3(nbt[0].z, nbt[1].z, nbt[2].z));
+//    V_TBN = mat3(
+//        vec3(nbt[0].x, nbt[1].x, nbt[2].x),
+//        vec3(nbt[0].y, nbt[1].y, nbt[2].y),
+//        vec3(nbt[0].z, nbt[1].z, nbt[2].z));
     V_WorldPos = ModelMatrix * position;
     V_LightSpaceFragPos = LightProjectionMatrix * LightViewMatrix * V_WorldPos;
     V_Normal = IT_ModelMatrix * normal;
